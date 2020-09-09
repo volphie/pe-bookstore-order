@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: order
-          image: cnaacr.azurecr.io/cna-bookstore-order:latest
+          image: admin14acr.azurecr.io/pe-bookstore-order:latest
           ports:
             - containerPort: 8080
 #          readinessProbe:
