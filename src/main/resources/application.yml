@@ -1,0 +1,86 @@
+server:
+  port: 8080
+---
+
+spring:
+  profiles: default
+  pid:
+    file: test.pid
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: localhost:9092
+        streams:
+          binder:
+            configuration:
+              default:
+                key:
+                  serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+                value:
+                  serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+      bindings:
+        event-in:
+          group: order
+          destination: cnabookstore
+          contentType: application/json
+        event-out:
+          destination: cnabookstore
+          contentType: application/json
+logging:
+  level:
+    org.hibernate.type: trace
+    org.springframework.cloud: debug
+server:
+  port: 8081
+api:
+  url:
+    book: http://localhost:8084
+    customer: http://localhost:8083
+    delivery: http://localhost:8082
+    payment: http://localhost:8086
+    van: http://localhost:8087
+---
+
+spring:
+  profiles: docker
+  pid:
+    file: test.pid
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: my-kafka.kafka.svc.cluster.local:9092
+        streams:
+          binder:
+            configuration:
+              default:
+                key:
+                  serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+                value:
+                  serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+      bindings:
+        event-in:
+          group: order
+          destination: cnabookstore
+          contentType: application/json
+        event-out:
+          destination: cnabookstore
+          contentType: application/json
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://kissable-aardvark-mysql.default.svc.cluster.local:3306/cnabookstore?serverTimezone=UTC&characterEncoding=UTF-8
+#    username: cnabooksore
+#    password: cnabookstore1234
+api:
+  url:
+    book: http://bookinventory:8080
+    customer: http://customer:8080
+    delivery: http://delivery:8080
+    payment: http://payment:8080
+    van: http://van:8080
